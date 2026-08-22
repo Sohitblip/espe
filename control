@@ -1,0 +1,7 @@
+Package: com.yourname.mycleanesp
+Name: MyCleanESP
+Depends: mobilesubstrate
+Version: 1.0
+Architecture: iphoneos-arm
+Description: Simple iOS Line ESP
+Maintainer: Sohbitblip
