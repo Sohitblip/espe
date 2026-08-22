@@ -4,25 +4,30 @@ on:
 
 jobs:
   build:
-    runs-on: macos-13
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
+      - name: Install Linux Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y clang build-essential git perl libssl-dev
+
       - name: Setup Theos environment variables
         run: |
-          echo "THEOS=/Users/runner/theos" >> $GITHUB_ENV
+          echo "THEOS=/home/runner/theos" >> $GITHUB_ENV
 
       - name: Install Theos Framework
         run: |
-          git clone --recursive https://github.com /Users/runner/theos
+          git clone --recursive https://github.com /home/runner/theos
           curl -LO https://github.com
-          tar -xf iPhoneOS14.5.sdk.tar.xz -C /Users/runner/theos/sdks/
+          tar -xf iPhoneOS14.5.sdk.tar.xz -C /home/runner/theos/sdks/
           rm iPhoneOS14.5.sdk.tar.xz
 
       - name: Compile Tweak
         run: |
-          export THEOS=/Users/runner/theos
+          export THEOS=/home/runner/theos
           make ARCHS="arm64" TARGET="iphone:clang:14.5:14.0" FINALPACKAGE=1
           
       - name: Upload Artifacts
