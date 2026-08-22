@@ -4,35 +4,29 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: macos-13
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Install Linux Dependencies
+      - name: Setup Theos environment
         run: |
-          sudo apt-get update
-          sudo apt-get install -y clang build-essential git perl libssl-dev
+          git clone --recursive https://github.com $HOME/theos
+          echo "THEOS=$HOME/theos" >> $GITHUB_ENV
 
-      - name: Setup Theos environment variables
+      - name: Setup iOS SDK
         run: |
-          echo "THEOS=/home/runner/theos" >> $GITHUB_ENV
-
-      - name: Install Theos Framework
-        run: |
-          git clone --recursive https://github.com /home/runner/theos
-
           curl -LO https://github.com
-          tar -xf iPhoneOS14.5.sdk.tar.xz -C /home/runner/theos/sdks/
+          tar -xf iPhoneOS14.5.sdk.tar.xz -C $HOME/theos/sdks/
           rm iPhoneOS14.5.sdk.tar.xz
 
       - name: Compile Tweak
         run: |
-          export THEOS=/home/runner/theos
+          export THEOS=$HOME/theos
           make ARCHS="arm64" TARGET="iphone:clang:14.5:14.0" FINALPACKAGE=1
           
       - name: Upload Artifacts
         uses: actions/upload-artifact@v4
         with:
           name: MyCleanESP
-          path: .theos/obj/MyCleanESP.dylib
+          path: .theos/obj/*.dylib
