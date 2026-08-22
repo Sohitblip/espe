@@ -21,6 +21,7 @@ jobs:
       - name: Install Theos Framework
         run: |
           git clone --recursive https://github.com /home/runner/theos
+
           curl -LO https://github.com
           tar -xf iPhoneOS14.5.sdk.tar.xz -C /home/runner/theos/sdks/
           rm iPhoneOS14.5.sdk.tar.xz
